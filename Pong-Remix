@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Pong</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.13/p5.js"></script>
+    <script>
+        var ballX; // x-location of the ball
+        var ballY; // y-location of the ball
+        var ballSpeedX = 5; // speed of the ball horizontally
+        var ballSpeedY = 5; // speed of the ball vertically
+        var paddleWidth = 30; //thickness of the paddle
+        var score = 0; //sets yhe intial value of score to zero
+        var paused; //makes a variable called paused
+
+        function setup() { //runs  once at the beginning of when the page loads
+            createCanvas(800, 600); // canvas size
+            noCursor(); // hides the mouse
+            ballX = random(width / 3, width / 1.5); //starts the ball in the middle of the canvas horizontally
+            ballY = random(height / 3, height / 1.5); //starts the ball in the middle of the canvas vertically
+            paused = false; //pauses it at the beginning
+        }
+
+        //Score
+        function scoreBox() { //creates a function called scoreBox
+            fill(255) //sets the color to white
+            textSize(50) //makes the text larger
+            textAlign(CENTER) //centers the text
+            text(score, width / 2, 100) //makes the 
+            text("Score:", width / 2, 50) //makes the 
+        }
+
+        function draw() { //runs forever
+            background(0, 0, 200); //makes the background color blue
+            moveBall(); // ball moves in X and Y directions
+            checkCollide(); //checks if there is a collision
+            drawPaddle1(); //draws the paddle on the right
+            drawPaddle2(); //draws the paddle on the left
+            drawBall(); //draws the ball
+            scoreBox(); //draws the score box
+        }
+
+        function moveBall() {
+            ballX = ballX + ballSpeedX; // updates ball location horizontally
+            ballY = ballY + ballSpeedY; // updates ball location vertically
+
+            // monitor speed/direction of ball
+            console.log("ballSpeedX: " + ballSpeedX + ", ballSpeedY: " + ballSpeedY);
+        }
+
+        function checkCollide() {
+            //bounces the ball of the top and bottom edge
+            if (ballY <= 0 || ballY > height) {//if the ball touches either edge
+                ballSpeedY = ballSpeedY * -1;//switch y value
+            }
+
+            if (ballX < 0 + paddleWidth) { // past goal line vertically
+                if (ballY > mouseY && ballY < mouseY + 200) { // within paddle horizontally
+                    ballSpeedX *= -1.1;//switchs the direction of x and increases the speed
+                    score++;//increases the score
+
+                }
+                else {// ball is on the left or right side of the paddle
+                    textSize(50)
+                    fill(255, 0, 0)
+                    textAlign(CENTER)
+                    text("GAME OVER!", width / 2, height / 2);
+                    noLoop();
+                }
+            }
+            //pause
+            if (!paused) { // if not paused (running)
+                background(0);
+                ballX -= ballSpeedX; // move the ball
+                ballY -= ballSpeedY; // move the ball
+                textSize(50) //makes the text bigger
+                fill(0, 255, 0) //makes the text green
+                textAlign(CENTER)
+                text("Paused", width / 2, height / 2);
+
+            }
+
+
+            if (ballX > width - paddleWidth) {
+                if (ballY > mouseY && ballY < mouseY + 200) {
+                    ballSpeedX *= -1.1;
+                    score++;
+                }
+
+                else {
+                    textSize(50)
+                    fill(255, 0, 0)
+                    textAlign(CENTER)
+                    text("GAME OVER!", width / 2, height / 2);
+                    noLoop();
+                }
+            }
+        }
+
+        function drawBall() {
+            noStroke();
+            ellipse(ballX, ballY, 20, 20);
+        }
+        //paddle on the right
+        function drawPaddle1() {
+            strokeWeight(4); //makes the border of the paddle thicker
+            rect(width - paddleWidth - 4, mouseY, paddleWidth, 200); //makes the shape of the padde
+        }
+        // paddle on the left  
+        function drawPaddle2() {
+            strokeWeight(4); //makes the border of the paddle thicker
+            rect(0 + paddleWidth - 25, mouseY, paddleWidth, 200); //makes the shape of the padde
+        }
+
+        function mousePressed() { //runs when the mouse is pressed
+            paused = !paused;
+        }
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
